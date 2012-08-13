@@ -1,0 +1,11 @@
+{
+    "name": "juicebot",
+    "description": "A Bot Server for RentJuice",
+    "version": "0.0.1",
+    "author": "Jonathan Azoff <jon@rentjuice.com>",
+    "dependencies": {
+		"async":  "0.1.x",
+        "wobot": "0.8.x"
+    },
+    "engine": "node >= 0.8.4"
+}
