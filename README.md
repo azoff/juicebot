@@ -55,7 +55,7 @@ Bot: Usage: @bot ...
 Creating Plugins
 ----------------
 New plugins will automatically load whenever the server is restarted. To add a new plugin, create a `.js` file in the `plugins` folder. The basename of the file will be the command name. For instacnce, `help` maps to `help.js`. Plugins
-are nothing more than AMD modules, and they only need specify the `handler` method. For instance, here is the 
+are nothing more than AMD modules, and they only need specify the `message` method. For instance, here is the 
 implementation of the `echo` module, which echo's back the arguments passed in by the caller:
 
 ```javascript
