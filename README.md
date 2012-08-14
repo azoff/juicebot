@@ -10,10 +10,10 @@ Fork or clone the juicebot project.
 $> git clone git://github.com/azoff/juicebot.git
 ```
 
-Add your own juicebot.json file. You can get the necessary values from [your HipChat XMPP profile](https://rentjuice.hipchat.com/account/xmpp).
+Add your own juicebot.json file. You can get the necessary values from [your HipChat XMPP profile](https://rentjuice.hipchat.com/account/xmpp). This example shows an account with
+Jabber ID `xxxx_yyyy@chat.hipchat.com` and password `zzzz`.
 
 ```json
-# for Jabber ID xxxx_yyyy@chat.hipchat.com and pass "zzzz"
 {
 	"alias":	"@bot",
     "org_id":   "xxxx", 
