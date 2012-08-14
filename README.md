@@ -28,10 +28,10 @@ Jabber ID `xxxx_yyyy@chat.hipchat.com` and password `zzzz`.
 }
 ```
 
-Run the server.
+Install dependencies and run the server.
 
 ```sh
-$> node juicebot.js
+$> npm install && node juicebot.js
 ```
 
 The server will run the corresponding plugin based on your `command`, argument requirements are specified
