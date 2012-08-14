@@ -28,10 +28,17 @@ Jabber ID `xxxx_yyyy@chat.hipchat.com` and password `zzzz`.
 }
 ```
 
-Install dependencies and run the server.
+Install dependencies
 
 ```sh
-$> npm install && node juicebot.js
+sudo apt-get install libexpat1-dev libicu-dev
+npm install
+```
+
+Run the server. You may optionally add a room name (defaults to the `development` channel)
+
+```sh
+$> node juicebot.js development
 ```
 
 When the server detects a `command` in it's XMPP channel, it will run the corresponding plugin (assuming one exists). Argument requirements, if any, are specified by the underlying plugin.
