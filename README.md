@@ -34,8 +34,7 @@ Install dependencies and run the server.
 $> npm install && node juicebot.js
 ```
 
-The server will run the corresponding plugin based on your `command`, argument requirements are specified
-by the underlying plugin.
+When the server detects a `command` in it's XMPP channel, it will run the corresponding plugin (assuming one exists). Argument requirements, if any, are specified by the underlying plugin.
 
 ```yaml
 # in hipchat...
