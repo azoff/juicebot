@@ -4,7 +4,7 @@ var sys     = require('sys');
 var path    = require('path');
 var async   = require('async');
 var wobot   = require('wobot');
-var conf    = fs.readFileSync('juicebot.json');
+var conf    = fs.readFileSync('./conf/juicebot.json');
 var opts    = JSON.parse(conf);
 var channel = process.argv.length > 2 ? process.argv[2] : 'development';
 
@@ -50,7 +50,7 @@ function plugins(callback) {
 }
 
 function respond(e, msg) {
-	if (e) { error(e); }
+	if (e) { error('Plugin Error', e); }
 	if (msg) { bot.message(opts.channel, msg); }
 }
 

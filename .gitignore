@@ -1,1 +1,2 @@
-juicebot.json
+conf/*.json
+node_modules
