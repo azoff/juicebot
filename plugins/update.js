@@ -44,9 +44,15 @@
 		});
 	}
 	
-	function reloadPlugins(bot) {
-		return function (out, callback) {
-			bot.reloadPlugins(callback);
+	function reloadPlugins(bot, callback) {
+		return function (error) {
+			if (error) { callback(error); }
+			else {
+				async.waterfall([
+					bot.reloadPlugins.bind(bot),
+					formatOutput
+				], callback);
+			}
 		}
 	}
 
@@ -60,12 +66,10 @@
 
 	exports.message = function(from, message, callback) {
 		callback(null, 'Updating Plugins...'); 
-		async.waterfall([
+		async.series([
 			async.apply(execute, 'git', 'pull', '--rebase', 'origin', 'master'),
-			async.apply(execute, 'npm', 'install'),
-			reloadPlugins(this),
-			formatOutput
-		], callback);
+			async.apply(execute, 'npm', 'install')
+		], reloadPlugins(this, callback));
 	};
 	
 })(this);
