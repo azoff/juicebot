@@ -42,7 +42,7 @@
 			}
 			parameters[args[0]] = args[1];
 		} else {
-			parameters.terms.push(part);
+			parameters.terms.push(part.trim());
 		}
 	}
 
@@ -50,13 +50,13 @@
 	function parseParameters(message) {
 		var parts = message.trim().split(/\s+/g);
 		var parameters = {
-			terms: [], limit: 5,
+			terms: [], limit: 1,
 			offset: 0, sort: 0,
 			radius_filter: 500,
 			location: opts.location
 		};
 		parts.forEach(async.apply(addParameter, parameters));
-		parameters.term = parameters.terms.join(' ');
+		parameters.term = parameters.terms.join('+');
 		return parameters;
 	}
 	
@@ -80,8 +80,8 @@
 	}
 	
 	function formatOutput(parameters, data, socket, callback) {
-		var page = Math.floor(parameters.offset / parameters.limit);
-		var pages = Math.floor(data.total / parameters.limit);
+		var page = Math.floor(parameters.offset / parameters.limit) || 1;
+		var pages = Math.floor(data.total / parameters.limit) || 1;
 		var messages = ['Found ' + data.total + ' results matching "' + parameters.term + '" (page '+page+' of '+pages+')'];
 		data.businesses.forEach(async.apply(formatBusiness, messages));
 		async.forEachSeries(messages, function(message, next){
