@@ -18,7 +18,11 @@ function bootstrap(identifier, plugin) {
 	bot.loadPlugin(identifier, { 
 		load: function() {
 			bot.onMessage(route, function(channel, from, message, matches){
-				module.message.call(bot, from, matches[1].trim(), respond);
+				try {
+					module.message.call(bot, from, matches[1].trim(), respond);
+				} catch (e) {
+					error('Uncaught Plugin Error', e);
+				}
 			});
 		}
 	});
