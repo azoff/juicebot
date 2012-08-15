@@ -54,7 +54,7 @@
 
 	exports.message = function(from, message, callback) {
 		callback(null, 'Attempting to self update...'); 
-		async.waterfall([
+		async.series([
 			async.apply(execute, 'git', 'pull', '--rebase', 'origin', 'master'),
 			async.apply(execute, 'npm', 'install')
 		], callback);
