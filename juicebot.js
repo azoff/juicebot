@@ -34,28 +34,36 @@ function connect(callback) {
 }
 
 function error(condition, text) {
-	console.error(condition + ':', text);
+	text = condition + ':' + text;
+	console.error(text);
+	bot.message(opts.channel, text);
 }
 
-function plugins(callback) {
+var plugins = bot.reloadPlugins = function(callback) {
 	console.info('> Loading plugins...');
 	async.waterfall([
 		async.apply(fs.readdir, './plugins'),
-		function(files, callback) {
+		function(files, callback) {			
+			var loaded = [];
 			files.forEach(function(file) {
 				console.info(' >', file);
 				var identifier = path.basename(file, '.js');
 				var plugin = './' + path.join('plugins', file);
-				try {
-					bootstrap(identifier, plugin);	
-				} catch (e) {
-					console.log('   > ERROR: ', e);
+				if (identifier in bot.plugins) {
+					console.warn('   > already loaded, skipping');
+				} else {
+					try {
+						bootstrap(identifier, plugin);
+						loaded.push(identifier);
+					} catch (e) {
+						console.log('   > ERROR: ', e);
+					}
 				}
 			});
-			callback();
+			callback(null, loaded);
 		}
 	], callback);
-}
+};
 
 function respond(e, msg) {
 	if (e) { error('Plugin Error', e); }
