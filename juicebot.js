@@ -39,7 +39,7 @@ function error(condition, text) {
 	bot.message(opts.channel, text);
 }
 
-var plugins = bot.reloadPlugins = function(callback) {
+function plugins(callback) {
 	console.info('> Loading plugins...');
 	async.waterfall([
 		async.apply(fs.readdir, './plugins'),
@@ -63,7 +63,7 @@ var plugins = bot.reloadPlugins = function(callback) {
 			callback(null, loaded);
 		}
 	], callback);
-};
+}
 
 function respond(e, msg) {
 	if (e) { error('Plugin Error', e); }

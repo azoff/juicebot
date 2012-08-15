@@ -44,18 +44,6 @@
 		});
 	}
 	
-	function reloadPlugins(bot, callback) {
-		return function (error) {
-			if (error) { callback(error); }
-			else {
-				async.waterfall([
-					bot.reloadPlugins.bind(bot),
-					formatOutput
-				], callback);
-			}
-		}
-	}
-
 	function formatOutput(newPlugins, callback) {
 		var output = 'No new plugins detected.';
 		if (newPlugins.length) {
@@ -63,13 +51,20 @@
 		}
 		callback(null, output);
 	}
+	
+	function pluginsFor(bot) {
+		return function(callback) {
+			callback(null, Object.keys(bot.plugins).join(', '));
+		}
+	}
 
 	exports.message = function(from, message, callback) {
 		callback(null, 'Updating Plugins...'); 
 		async.series([
 			async.apply(execute, 'git', 'pull', '--rebase', 'origin', 'master'),
-			async.apply(execute, 'npm', 'install')
-		], reloadPlugins(this, callback));
+			async.apply(execute, 'npm', 'install'),
+			pluginsFor(this)
+		], callback);
 	};
 	
 })(this);
