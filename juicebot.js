@@ -85,4 +85,6 @@ bot.onDisconnect(function(){
 
 bot.onError(error);
 
-async.series([plugins, connect]);
+async.series([plugins, connect], function(){
+	bot.message(opts.channel, 'I\'m ready! ' + Object.keys(bot.plugins).join(','));
+});

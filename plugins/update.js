@@ -51,19 +51,12 @@
 		}
 		callback(null, output);
 	}
-	
-	function pluginsFor(bot) {
-		return function(callback) {
-			callback(null, Object.keys(bot.plugins).join(', '));
-		}
-	}
 
 	exports.message = function(from, message, callback) {
-		callback(null, 'Updating Plugins...'); 
-		async.series([
+		callback(null, 'Attempting to self update...'); 
+		async.waterfall([
 			async.apply(execute, 'git', 'pull', '--rebase', 'origin', 'master'),
-			async.apply(execute, 'npm', 'install'),
-			pluginsFor(this)
+			async.apply(execute, 'npm', 'install')
 		], callback);
 	};
 	
