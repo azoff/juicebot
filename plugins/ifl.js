@@ -1,5 +1,10 @@
 (function(exports){
 
+	/**
+	 * You'll need a google conf file (./conf/google.json) to load this plugin...
+	 * use the api key from https://code.google.com/apis/console 
+	 */
+
 	"use strict";
 	
 	var fs    = require('fs');

@@ -42,7 +42,11 @@ function plugins(callback) {
 				console.info(' >', file);
 				var identifier = path.basename(file, '.js');
 				var plugin = './' + path.join('plugins', file);
-				bootstrap(identifier, plugin);	
+				try {
+					bootstrap(identifier, plugin);	
+				} catch (e) {
+					console.log('   > ERROR: ', e);
+				}
 			});
 			callback();
 		}
