@@ -34,7 +34,7 @@ function connect(callback) {
 }
 
 function error(condition, text) {
-	text = condition + ':' + text;
+	text = condition + ': ' + text;
 	console.error(text);
 	bot.message(opts.channel, text);
 }
