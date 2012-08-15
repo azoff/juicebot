@@ -44,23 +44,17 @@ function plugins(callback) {
 	async.waterfall([
 		async.apply(fs.readdir, './plugins'),
 		function(files, callback) {			
-			var loaded = [];
 			files.forEach(function(file) {
 				console.info(' >', file);
 				var identifier = path.basename(file, '.js');
 				var plugin = './' + path.join('plugins', file);
-				if (identifier in bot.plugins) {
-					console.warn('   > already loaded, skipping');
-				} else {
-					try {
-						bootstrap(identifier, plugin);
-						loaded.push(identifier);
-					} catch (e) {
-						console.log('   > ERROR: ', e);
-					}
+				try {
+					bootstrap(identifier, plugin);
+				} catch (e) {
+					console.log('   > ERROR: ', e);
 				}
 			});
-			callback(null, loaded);
+			callback(null);
 		}
 	], callback);
 }
@@ -73,6 +67,7 @@ function respond(e, msg) {
 bot.onConnect(function(){
 	console.info('> Joining channel...');
 	bot.join(opts.channel);
+	bot.message(opts.channel, 'I\'m ready! ' + Object.keys(bot.plugins).sort().join(', '));
 	console.info('> Ready!');
 });
 
@@ -85,6 +80,4 @@ bot.onDisconnect(function(){
 
 bot.onError(error);
 
-async.series([plugins, connect], function(){
-	bot.message(opts.channel, 'I\'m ready! ' + Object.keys(bot.plugins).join(','));
-});
+async.series([plugins, connect]);
