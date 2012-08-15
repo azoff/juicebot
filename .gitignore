@@ -1,1 +1,4 @@
-juicebot.json
+conf/*.json
+node_modules
+nohup.*
+npm-debug.log

@@ -4,7 +4,7 @@ var sys     = require('sys');
 var path    = require('path');
 var async   = require('async');
 var wobot   = require('wobot');
-var conf    = fs.readFileSync('juicebot.json');
+var conf    = fs.readFileSync('./conf/juicebot.json');
 var opts    = JSON.parse(conf);
 var channel = process.argv.length > 2 ? process.argv[2] : 'development';
 
@@ -18,7 +18,11 @@ function bootstrap(identifier, plugin) {
 	bot.loadPlugin(identifier, { 
 		load: function() {
 			bot.onMessage(route, function(channel, from, message, matches){
-				module.message.call(bot, from, matches[1].trim(), respond);
+				try {
+					module.message.call(bot, from, matches[1].trim(), respond);
+				} catch (e) {
+					error('Uncaught Plugin Error', e);
+				}
 			});
 		}
 	});
@@ -30,33 +34,40 @@ function connect(callback) {
 }
 
 function error(condition, text) {
-	console.error(condition + ':', text);
+	text = condition + ': ' + text;
+	console.error(text);
+	bot.message(opts.channel, text);
 }
 
 function plugins(callback) {
 	console.info('> Loading plugins...');
 	async.waterfall([
 		async.apply(fs.readdir, './plugins'),
-		function(files, callback) {
+		function(files, callback) {			
 			files.forEach(function(file) {
 				console.info(' >', file);
 				var identifier = path.basename(file, '.js');
 				var plugin = './' + path.join('plugins', file);
-				bootstrap(identifier, plugin);	
+				try {
+					bootstrap(identifier, plugin);
+				} catch (e) {
+					console.log('   > ERROR: ', e);
+				}
 			});
-			callback();
+			callback(null);
 		}
 	], callback);
 }
 
 function respond(e, msg) {
-	if (e) { error(e); }
+	if (e) { error('Plugin Error', e.substr ? e : JSON.stringify(e)); }
 	if (msg) { bot.message(opts.channel, msg); }
 }
 
 bot.onConnect(function(){
 	console.info('> Joining channel...');
 	bot.join(opts.channel);
+	bot.message(opts.channel, 'I\'m ready! ' + Object.keys(bot.plugins).sort().join(', '));
 	console.info('> Ready!');
 });
 
