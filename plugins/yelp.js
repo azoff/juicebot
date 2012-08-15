@@ -56,7 +56,8 @@
 			location: opts.location
 		};
 		parts.forEach(async.apply(addParameter, parameters));
-		parameters.term = parameters.terms.join('+');
+		parameters.term = parameters.terms.join(' ');
+		delete parameters.terms;
 		return parameters;
 	}
 	
