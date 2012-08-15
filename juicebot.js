@@ -7,30 +7,57 @@ var wobot   = require('wobot');
 var conf    = fs.readFileSync('./conf/juicebot.json');
 var opts    = JSON.parse(conf);
 var channel = process.argv.length > 2 ? process.argv[2] : 'development';
+var alias   = new RegExp('\\s*'+opts.alias+'\\s*');
+var noop	= function(){};
 
 opts.jid     = opts.org_id + '_' + opts.user_id + '@' + opts.servers.user;
 opts.channel = opts.org_id + '_' + channel + '@' + opts.servers.channel;
 var bot      = new wobot.Bot(opts);
 
 function bootstrap(identifier, plugin) {
-	var module = require(plugin);
-	var route = new RegExp(opts.alias + '\\s+' + identifier + '\\s*(.*)$', 'i');
-	bot.loadPlugin(identifier, { 
-		load: function() {
-			bot.onMessage(route, function(channel, from, message, matches){
-				try {
-					module.message.call(bot, from, matches[1].trim(), respond);
-				} catch (e) {
-					error('Uncaught Plugin Error', e);
-				}
-			});
-		}
-	});
+	try {
+		var module = require(plugin);
+		if (!module.load) { module.load = noop; }
+		bot.loadPlugin(identifier, module);
+	} catch (e) {
+		error('   > skipped: ', e);
+	}
 }
 
 function connect(callback) {
 	console.info('> Connecting to server...');
 	callback(null, bot.connect());
+}
+
+function commandToJob(from, command, callback) {
+	var parts = command.split(/\s+/);
+	var identifier = parts[0];
+	var plugin = bot.plugins[identifier];
+	var message = parts.length > 1 ? parts[1].trim() : '';
+	callback(null, function job(input, output) {
+		if (!output) { output = input; input = message; }
+		else { input = input + ' ' + message; }
+		if (plugin && plugin.message) {
+			plugin.message.call(bot, from, input, output);
+		} else {
+			output('Sorry, I don\'t know how to "'+identifier+'"...');
+		}
+	});
+}
+
+function delegate(channel, from, message) {
+	if (alias.test(message)) {
+		var commands = message.replace(alias, '').trim().split(/\s*\|\s*/g);
+		var mapper   = async.apply(commandToJob, from);
+		try {
+			async.waterfall([
+				async.apply(async.map, commands, mapper),
+				async.waterfall
+			], respond);
+		} catch (e) {
+			error('Plugin Error', e);
+		}
+	}
 }
 
 function error(condition, text) {
@@ -48,11 +75,7 @@ function plugins(callback) {
 				console.info(' >', file);
 				var identifier = path.basename(file, '.js');
 				var plugin = './' + path.join('plugins', file);
-				try {
-					bootstrap(identifier, plugin);
-				} catch (e) {
-					console.log('   > ERROR: ', e);
-				}
+				bootstrap(identifier, plugin);
 			});
 			callback(null);
 		}
@@ -67,6 +90,7 @@ function respond(e, msg) {
 bot.onConnect(function(){
 	console.info('> Joining channel...');
 	bot.join(opts.channel);
+	bot.onMessage(delegate);
 	bot.message(opts.channel, 'I\'m ready! ' + Object.keys(bot.plugins).sort().join(', '));
 	console.info('> Ready!');
 });
