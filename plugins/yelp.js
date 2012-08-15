@@ -37,8 +37,10 @@
 				case 'radius':
 				case 'distance':
 					args[0] = 'radius_filter';
+					break;
 				case 'deals':
 					args[0] = 'deals_filter';
+					break;
 			}
 			parameters[args[0]] = args[1];
 		} else {
