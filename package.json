@@ -6,6 +6,7 @@
     "dependencies": {
 		"async":  "0.1.x",
 		"jsdom":  "0.2.x",
+		"yelp":   "0.1.x",
 		"jquery": "1.7.x",
         "wobot":  "0.8.x"
     },

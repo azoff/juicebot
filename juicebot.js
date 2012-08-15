@@ -60,7 +60,7 @@ function plugins(callback) {
 }
 
 function respond(e, msg) {
-	if (e) { error('Plugin Error', e); }
+	if (e) { error('Plugin Error', e.substr ? e : JSON.stringify(e)); }
 	if (msg) { bot.message(opts.channel, msg); }
 }
 
