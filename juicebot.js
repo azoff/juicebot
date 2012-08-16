@@ -40,7 +40,7 @@ function commandToJob(from, command, callback) {
 		if (plugin && plugin.message) {
 			plugin.message.call(bot, from, input, output);
 		} else {
-			output(null, identifer + '? I\'m afraid I cant do that '+from.split(/\s+/).shift()+'...');
+			output(null, identifier + '? I\'m afraid I cant do that '+from.split(/\s+/).shift()+'...');
 		}
 	});
 }
