@@ -6,13 +6,13 @@
 	 */
 
 	"use strict";
-	
+
 	var fs    = require('fs');
 	var https = require('https');
 	var conf  = fs.readFileSync('./conf/google.json');
 	var opts  = JSON.parse(conf);
 
-	exports.message = function(from, message, callback) {	
+	exports.message = function(from, message, callback) {
 		var json = '';
 		if (message) {
 			var request = https.get({
