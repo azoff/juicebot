@@ -31,12 +31,12 @@
 						callback(response.error.message);
 					} else {
 						var first = response.items[0];
-			var title = first.title;
-			var link = first.link;
-			var out = link +' ('+ title +')';
-			callback(null, out);
+						var title = first.title;
+						var link = first.link;
+						var out = link +' ('+ title +')';
+						callback(null, out);
 					}
-		});
+				});
 				request.end();
 			}).on('error', callback);
 		} else {
