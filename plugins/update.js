@@ -43,19 +43,12 @@
 			}
 		});
 	}
-	
-	function formatOutput(newPlugins, callback) {
-		var output = 'No new plugins detected.';
-		if (newPlugins.length) {
-			output = 'Loaded plugins: ' + newPlugins.join(' ');
-		}
-		callback(null, output);
-	}
 
 	exports.message = function(from, message, callback) {
 		callback(null, 'Attempting to self update...'); 
 		async.series([
-			async.apply(execute, 'git', 'pull', '--rebase', 'origin', 'master'),
+			async.apply(execute, 'git', 'reset', '--hard', 'HEAD'),
+			async.apply(execute, 'git', 'pull', 'origin', 'master'),
 			async.apply(execute, 'npm', 'install')
 		], callback);
 	};
