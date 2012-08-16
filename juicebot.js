@@ -40,7 +40,7 @@ function commandToJob(from, command, callback) {
 		if (plugin && plugin.message) {
 			plugin.message.call(bot, from, input, output);
 		} else {
-			output(null, 'Sorry, I don\'t know how to "'+identifier+'"...');
+			output(null, identifer + '? I\'m afraid I cant do that '+from.split(/\s+/).shift()+'...');
 		}
 	});
 }
