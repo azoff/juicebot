@@ -6,43 +6,39 @@
 	var conf  = './conf/memo.json';
 	var async = require('async');
 	var json  = fs.readFileSync(conf, 'utf8');
-	var db    = JSON.parse(json);
-
-	// TODO: getting callback is undefined
-	function stats(prefix, out, callback) {
-		var count = Object.keys(db).length;
-		callback(prefix + ', ' + count + ' now entries in the database.');
-	}
+	var db    = json ? JSON.parse(json) : {};
 
 	function set(key, message, callback) {
 		db[key] = message;
 		json = JSON.stringify(db, null, 4);
 		async.waterfall([
-			async.apply(fs.writeFile, conf, json)
-			//, async.apply(stats, 'Key "' + key + '" saved') 
+			async.apply(fs.writeFile, conf, json),
+			function(next) { next(null, 'Ok, I\'ll remember "'+key+'"'); } 
 		], callback);
 	}
 	
 	function remove(key, callback) {
-		if (delete db[key]) {
+		if (key in db) {
+			delete db[key];
+			json = JSON.stringify(db, null, 4);
 			async.waterfall([
-				async.apply(fs.writeFile, conf, json)
-				//, async.apply(stats, 'Key "' + key + '" deleted')
+				async.apply(fs.writeFile, conf, json),
+				function(next) { next(null, 'Ok, I\'ll forget "'+key+'"'); }
 			], callback);
 		} else {
-			callback('Unable to find entry for "'+key+'" in the database!')
+			callback(null, 'I can\'t remember anything about "'+key+'"...')
 		}
 	}
 
 	function get(key, callback) {
 		if (key in db) { callback(null, db[key]) }
-		else { callback('Unable to find entry for "'+key+'" in the database!'); }
+		else { callback(null, 'I can\'t remember anything about "'+key+'"...'); }
 	}
 
 	exports.message = function(from, message, callback) {	
-		var words = message.split(/\s+/);
-		var key = words.shift();
-		var value = words.join(' ');
+		var words = message.split(/\s/g);
+		var key = words.shift().trim();
+		var value = words.join(' ').trim();
 		if (words.length) {
 			set(key, value, callback);
 		} else if (key.indexOf(':') === 0) {

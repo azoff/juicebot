@@ -30,17 +30,17 @@ function connect(callback) {
 }
 
 function commandToJob(from, command, callback) {
-	var parts = command.split(/\s+/);
-	var identifier = parts[0];
+	var parts = command.split(/\s/);
+	var identifier = parts.shift().trim();
 	var plugin = bot.plugins[identifier];
-	var message = parts.length > 1 ? parts[1].trim() : '';
+	var message = parts.join(' ').trim();
 	callback(null, function job(input, output) {
 		if (!output) { output = input; input = message; }
-		else { input = input + ' ' + message; }
+		else { input = message + ' ' + input; }
 		if (plugin && plugin.message) {
 			plugin.message.call(bot, from, input, output);
 		} else {
-			output('Sorry, I don\'t know how to "'+identifier+'"...');
+			output(null, 'Sorry, I don\'t know how to "'+identifier+'"...');
 		}
 	});
 }
@@ -83,7 +83,7 @@ function plugins(callback) {
 }
 
 function respond(e, msg) {
-	if (e) { error('Plugin Error', e.substr ? e : JSON.stringify(e)); }
+	if (e) { error('Plugin Error', e.message ? e.message : e); }
 	if (msg) { bot.message(opts.channel, msg); }
 }
 
