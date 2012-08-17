@@ -25,7 +25,7 @@
 				var locname = $module.data('location-presentation-name').trim();
 				var temp = $module.find('.wx-temp:first').text().trim();
 				var output = [locname, ' is ', temp, ' at ', timestamp];
-				callback(null, message + ', ' + output.join(''));
+				callback(null, output.join(''));
 			}
 		});
 	}

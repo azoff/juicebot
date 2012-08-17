@@ -29,7 +29,7 @@
 			response.setEncoding('utf8');
 			response.on('data', function(chunk){ html += chunk; });
 			response.on('end', function(){ 
-				respond(message, html, callback); 
+				respond(message.trim() || from, html, callback); 
 			});
 		}).on('error', callback);
 	};
