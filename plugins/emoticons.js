@@ -26,7 +26,7 @@
 			if (error) { callback(error); }			
 			else {
 				var $ = getjQuery(window);
-				var filter = message !== 'recent' ? new RegExp(message || '.*') : /.*/;
+				var filter = message !== 'recent' ? new RegExp(message || '.*', 'i') : /.*/;
 				var mapper = async.apply(getText, filter);
 				var shortcuts = jquery.makeArray($('.emoticons:first .shortcut').map(mapper));
 				if (message === 'recent') {
