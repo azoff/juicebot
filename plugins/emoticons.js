@@ -29,6 +29,21 @@
 				var filter = message !== 'recent' ? new RegExp(message || '.*', 'i') : /.*/;
 				var mapper = async.apply(getText, filter);
 				var shortcuts = jquery.makeArray($('.emoticons:first .shortcut').map(mapper));
+				var custom_emoticons = {
+					'(alabamuh)': 'brian seitel',
+					'(angrydavid)': 'david vivero',
+					'(azoff)': 'jon azoff',
+					'(chiefkunal)': 'kunal shah',
+					'(dunkman)': 'nick dunkman',
+					'(fearthebeard)': 'matt gidney',
+					'(kunal)': 'kunal shah'
+				};
+				for (command in custom_emoticons) {
+					// match command or person's actual name
+					if (command.match(filter) || custom_emoticons[command].match(filter)) {
+						shortcuts.push(command.replace(/\W+/g, '') + ' ' + command);
+					}
+				}
 				if (message === 'recent') {
 					shortcuts = shortcuts.slice(0, 5);
 				} else {	
