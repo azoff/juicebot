@@ -48,7 +48,8 @@
 		callback(null, 'Attempting to self update...'); 
 		async.series([
 			async.apply(execute, 'git', 'reset', '--hard', 'HEAD'),
-			async.apply(execute, 'git', 'pull', 'origin', 'master'),
+			async.apply(execute, 'git', 'fetch', 'origin', 'master'),
+			async.apply(execute, 'git', 'merge', 'origin/master'),
 			async.apply(execute, 'npm', 'install')
 		], callback);
 	};
