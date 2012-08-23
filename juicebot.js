@@ -18,7 +18,7 @@ function bootstrap(identifier, plugin) {
 	try {
 		var module = require(plugin);
 		if (!module.load) { module.load = noop; }
-		bot.loadPlugin(identifier, module);
+		bot.loadPlugin(identifier, module, opts);
 	} catch (e) {
 		error('   > skipped: ', e);
 	}
