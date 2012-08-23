@@ -47,7 +47,8 @@ function commandToJob(from, command, callback) {
 
 function delegate(channel, from, message) {
 	if (alias.test(message)) {
-		var commands = message.replace(alias, '').trim().split(/\s*\|\s*/g);
+		message = message.substr(message.indexOf(opts.alias) + opts.alias.length);
+		var commands = message.trim().split(/\s*\|\s*/g);
 		var mapper   = async.apply(commandToJob, from);
 		try {
 			async.waterfall([
