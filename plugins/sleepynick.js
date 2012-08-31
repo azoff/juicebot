@@ -20,7 +20,7 @@
 				var $ = getjQuery(window),
 					images = $('.post img'),
 					image = images[Math.floor(Math.random() * images.length)].src;
-				callback(null, '<img src="'+image+'" />');
+				callback(null, image);
 			}
 		});
 	}
