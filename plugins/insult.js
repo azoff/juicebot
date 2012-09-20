@@ -24,12 +24,18 @@
 	}
 
 	exports.message = function(from, message, callback) {	
-		var html = '';
+		var html = ''; 
+		message = message.trim();
+		from = from.split(/\s+/g).shift();
 		var request = http.get('http://www.insultgenerator.org', function(response){
 			response.setEncoding('utf8');
 			response.on('data', function(chunk){ html += chunk; });
 			response.on('end', function(){ 
-				respond(message.trim() || from, html, callback); 
+				if (/jon/ig.test(message)) {
+					callback(null, 'Sorry ' + from + ', I am not programmed to insult my creator.');
+				} else {
+					respond(message || from, html, callback); 
+				}
 			});
 		}).on('error', callback);
 	};
