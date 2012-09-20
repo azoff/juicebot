@@ -31,8 +31,10 @@
 			response.setEncoding('utf8');
 			response.on('data', function(chunk){ html += chunk; });
 			response.on('end', function(){ 
-				if (/jon/ig.test(message)) {
+				if (/(jon)|(azoff)/ig.test(message)) {
 					callback(null, 'Sorry ' + from + ', I am not programmed to insult my creator.');
+				} else if (/chase/i.test(from)) {
+					respond(from, html, callback); 
 				} else {
 					respond(message || from, html, callback); 
 				}
